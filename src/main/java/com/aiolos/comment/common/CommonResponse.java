@@ -32,6 +32,13 @@ public class CommonResponse<T> implements Serializable {
         return new CommonResponse(data);
     }
 
+    public static CommonResponse ok(String msg, Object data) {
+        CommonResponse res = new CommonResponse();
+        res.msg = msg;
+        res.data = data;
+        return res;
+    }
+
     public static CommonResponse error(Integer errCode, String errMsg) {
         CommonResponse res = new CommonResponse();
         res.code = errCode;

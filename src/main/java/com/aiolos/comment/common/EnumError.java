@@ -6,10 +6,16 @@ package com.aiolos.comment.common;
  */
 public enum EnumError implements CommonError {
 
-    UNKNOWN_ERROR(500, "未知错误"),
+    // 通用错误类型
+    UNKNOWN_ERROR(10000, "未知错误"),
     USER_NOT_LOGGED_IN(10001, "用户尚未登录"),
     NO_HANDLER_FOUND(10002, "找不到执行的路径"),
     BIND_EXCEPTION_ERROR(10003, "请求参数错误"),
+    PARAMETER_VALIDATION_ERROR(10004, "请求参数校验失败"),
+
+    // 用户服务相关错误类型
+    REGISTER_DUP_FAIL(20001, "用户已存在"),
+    LOGIN_FAIL(20002, "手机号或密码错误"),
     ;
 
     EnumError(int errCode, String errMsg) {

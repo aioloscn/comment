@@ -7,7 +7,7 @@ spring:
     name: comment
     url: jdbc:mysql://47.97.125.200:3306/comment?useUnicode=true&characterEncoding=UTF-8
     username: aiolos
-    password: root
+    password: aiolosSQL1204285.
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
   resources:
