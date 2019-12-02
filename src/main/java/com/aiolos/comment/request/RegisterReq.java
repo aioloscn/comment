@@ -9,17 +9,31 @@ import javax.validation.constraints.NotNull;
  */
 public class RegisterReq {
 
+    private String nickname;
+
+    private String headPortrait;
+
     @NotBlank(message = "手机号不能为空")
     private String telphone;
 
     @NotBlank(message = "密码不能为空")
     private String password;
 
-    @NotBlank(message = "昵称不能为空")
-    private String nickName;
+    public String getNickname() {
+        return nickname;
+    }
 
-    @NotNull(message = "性别不能为空")
-    private Integer gender;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(String headPortrait) {
+        this.headPortrait = headPortrait;
+    }
 
     public String getTelphone() {
         return telphone;
@@ -37,19 +51,4 @@ public class RegisterReq {
         this.password = password;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
 }
