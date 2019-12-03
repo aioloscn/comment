@@ -111,4 +111,16 @@
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByModel" resultType="java.lang.Integer" parameterType="com.aiolos.comment.model.ActivityThumbsUpModel">
+    select count(*) from campus_activity_thumbs_up
+    where activity_id = #{activityId,jdbcType=INTEGER}
+    and from_uid = #{fromUid,jdbcType=INTEGER}
+  </select>
+
+  <delete id="cancelThumbsUp" parameterType="com.aiolos.comment.model.ActivityThumbsUpModel">
+    delete from campus_activity_thumbs_up
+    where activity_id = #{activityId,jdbcType=INTEGER}
+    and from_uid = #{fromUid,jdbcType=INTEGER}
+  </delete>
 </mapper>

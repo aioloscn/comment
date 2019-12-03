@@ -146,4 +146,10 @@
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectAllTopics" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from campus_activity_topic
+  </select>
 </mapper>

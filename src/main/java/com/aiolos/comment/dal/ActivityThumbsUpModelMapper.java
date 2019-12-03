@@ -50,4 +50,8 @@ public interface ActivityThumbsUpModelMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ActivityThumbsUpModel record);
+
+    int selectByModel(ActivityThumbsUpModel record);
+
+    int cancelThumbsUp(ActivityThumbsUpModel record);
 }

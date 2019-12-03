@@ -13,7 +13,7 @@ public interface InformationService {
 
     CommonResponse releaseContent(InformationModel informationModel);
 
-    CommonResponse deleteInformation(int id);
+    CommonResponse deleteInformation(Integer id);
 
     CommonResponse selectAllInformation(int topicId, Integer userId, int pageIndex, int pageCount);
 

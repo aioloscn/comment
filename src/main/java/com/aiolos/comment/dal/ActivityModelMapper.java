@@ -1,6 +1,10 @@
 package com.aiolos.comment.dal;
 
 import com.aiolos.comment.model.ActivityModel;
+import com.aiolos.comment.vo.ActivityVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ActivityModelMapper {
     /**
@@ -58,4 +62,12 @@ public interface ActivityModelMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ActivityModel record);
+
+    List<ActivityVO> selectAllActivity(@Param("topicId") int topicId, @Param("pageIndex") int pageIndex, @Param("pageCount") int pageCount);
+
+    int increaseThumbsUp(int id);
+
+    int decreaseThumbsUp(int id);
+
+    int increaseComment(int id);
 }

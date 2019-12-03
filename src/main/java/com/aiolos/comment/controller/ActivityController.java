@@ -4,14 +4,15 @@ import com.aiolos.comment.common.CommonResponse;
 import com.aiolos.comment.common.Constant;
 import com.aiolos.comment.common.CustomizeException;
 import com.aiolos.comment.common.EnumError;
-import com.aiolos.comment.model.InformationImagesModel;
-import com.aiolos.comment.model.InformationModel;
-import com.aiolos.comment.model.InformationThumbsUpModel;
-import com.aiolos.comment.request.InformationImageReq;
-import com.aiolos.comment.request.InformationReq;
-import com.aiolos.comment.request.InformationThumbsUpReq;
-import com.aiolos.comment.service.InformationImageService;
-import com.aiolos.comment.service.InformationService;
+import com.aiolos.comment.model.ActivityImagesModel;
+import com.aiolos.comment.model.ActivityModel;
+import com.aiolos.comment.model.ActivityThumbsUpModel;
+import com.aiolos.comment.model.ActivityTopicModel;
+import com.aiolos.comment.request.ActivityImageReq;
+import com.aiolos.comment.request.ActivityReq;
+import com.aiolos.comment.request.ActivityThumbsUpReq;
+import com.aiolos.comment.service.ActivityImageService;
+import com.aiolos.comment.service.ActivityService;
 import com.aiolos.comment.utils.CommonUtil;
 import com.aiolos.comment.utils.FastDFSClient;
 import com.aiolos.comment.utils.FileUtils;
@@ -26,55 +27,59 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Aiolos
- * @date 2019-11-28 01:59
+ * @date 2019-12-03 04:52
  */
 @Slf4j
 @RestController
-@RequestMapping("/information")
-public class InformationController {
+@RequestMapping("/activity")
+public class ActivityController {
+
+    @Autowired
+    private ActivityService activityService;
 
     @Autowired
     private FastDFSClient fastDFSClient;
 
     @Autowired
-    private InformationService informationService;
-
-    @Autowired
-    private InformationImageService informationImageService;
+    private ActivityImageService activityImageService;
 
     @PostMapping("/release/content")
     @ResponseBody
-    public CommonResponse releaseContent(@Valid @RequestBody InformationReq informationReq, BindingResult bindingResult) throws CustomizeException {
+    public CommonResponse releaseContent(@Valid @RequestBody ActivityReq activityReq, BindingResult bindingResult) throws CustomizeException {
 
-        log.info("implement function releaseContent, informationReq: {}", informationReq.toString());
+        log.info("implement function releaseContent, activityReq: {}", activityReq.toString());
         if (bindingResult.hasErrors()) {
             throw new CustomizeException(EnumError.PARAMETER_VALIDATION_ERROR, CommonUtil.processErrorString(bindingResult));
         }
 
         // 将包含emoji的消息转码
+        String title = StringUtils.EMPTY;
         String content = StringUtils.EMPTY;
-        if (StringUtils.isNotBlank(informationReq.getContent())) {
-            content = EmojiParser.parseToAliases(informationReq.getContent(), EmojiParser.FitzpatrickAction.PARSE);
+        if (StringUtils.isNotBlank(activityReq.getContent())) {
+            title = EmojiParser.parseToAliases(activityReq.getTitle(), EmojiParser.FitzpatrickAction.PARSE);
+            content = EmojiParser.parseToAliases(activityReq.getContent(), EmojiParser.FitzpatrickAction.PARSE);
         }
 
-        InformationModel informationModel = new InformationModel();
-        informationModel.setFromUid(informationReq.getFromUid());
-        informationModel.setContent(content);
-        informationModel.setTopicId(informationReq.getTopicId());
-        informationModel.setProvince(informationReq.getProvince());
-        informationModel.setCity(informationReq.getCity());
-        informationModel.setCounty(informationReq.getCounty());
-        return informationService.releaseContent(informationModel);
+        ActivityModel activityModel = new ActivityModel();
+        activityModel.setFromUid(activityReq.getFromUid());
+        activityModel.setTitle(title);
+        activityModel.setContent(content);
+        activityModel.setTopicId(activityReq.getTopicId());
+        activityModel.setProvince(activityReq.getProvince());
+        activityModel.setCity(activityReq.getCity());
+        activityModel.setCounty(activityReq.getCounty());
+        return activityService.releaseContent(activityModel);
     }
 
     @PostMapping("/release/image")
     @ResponseBody
-    public CommonResponse releaseImage(InformationImageReq informationImageReq) throws Exception {
+    public CommonResponse releaseImage(ActivityImageReq activityImageReq) throws Exception {
 
-        String base64Data = informationImageReq.getImage();
+        String base64Data = activityImageReq.getImage();
         String dataPrix = StringUtils.EMPTY; // base64格式前头
         String data = StringUtils.EMPTY;//实体部分数据
         if(base64Data == null || "".equals(base64Data)) {
@@ -117,7 +122,7 @@ public class InformationController {
             file.mkdirs();
             file.setWritable(true);
         }
-        String imgPath = imgFile + File.separator + ((int) (Math.random() * 100000)) + "information#" + informationImageReq.getInformationId() + suffix;
+        String imgPath = imgFile + File.separator + ((int) (Math.random() * 100000)) + "activity#" + activityImageReq.getActivityId() + suffix;
         log.info("imageUrl: {}", imgPath);
         FileUtils.base64ToFile(imgPath, base64Data);
         log.info("Fileutils.base64ToFile()");
@@ -126,58 +131,65 @@ public class InformationController {
         String url = fastDFSClient.uploadFile(multipartFile);
 
         log.info("url: {}", url);
-        InformationImagesModel informationImagesModel = new InformationImagesModel();
-        informationImagesModel.setInformationId(informationImageReq.getInformationId());
-        informationImagesModel.setImage(url);
-        return informationImageService.insertImage(informationImagesModel);
+        ActivityImagesModel activityImagesModel = new ActivityImagesModel();
+        activityImagesModel.setActivityId(activityImagesModel.getActivityId());
+        activityImagesModel.setImage(url);
+        return activityImageService.insertImage(activityImagesModel);
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public CommonResponse deleteInformation(@PathVariable Integer id) {
+    public CommonResponse deleteActivity(@PathVariable Integer id) {
 
-        log.info("implement function delete, information id: {}", id);
+        log.info("implement function delete, activity id: {}", id);
         if (id == null)
             return CommonResponse.error(EnumError.BIND_EXCEPTION_ERROR.getErrCode(), EnumError.BIND_EXCEPTION_ERROR.getErrMsg());
-        return informationService.deleteInformation(id);
+        return activityService.deleteActivity(id);
     }
 
     @GetMapping("/get")
     @ResponseBody
-    public CommonResponse getInformation(@RequestParam(value = "topicId", required = false, defaultValue = "0") int topicId,
+    public CommonResponse getActivity(@RequestParam(value = "topicId", required = false, defaultValue = "0") int topicId,
                                          @RequestParam(value = "userId", required = false) Integer userId,
                                          @RequestParam(value = "pageIndex") int pageIndex) {
 
         log.info("implement function get, topicId: {}, userId: {}, pageIndex: {}", topicId, userId, pageIndex);
-        return informationService.selectAllInformation(topicId, userId, pageIndex, Constant.PAGECOUNT);
+        return activityService.getActivity(topicId, userId, pageIndex, Constant.PAGECOUNT);
     }
 
     @PostMapping("/thumbsUp")
     @ResponseBody
-    public CommonResponse thumbsUp(@Valid @RequestBody InformationThumbsUpReq informationThumbsUpReq, BindingResult bindingResult) throws CustomizeException {
+    public CommonResponse thumbsUp(@Valid @RequestBody ActivityThumbsUpReq activityThumbsUpReq, BindingResult bindingResult) throws CustomizeException {
 
-        log.info("implement function thumbsUp, informationThumbsUp body: {}", JSONObject.valueToString(informationThumbsUpReq));
-        InformationThumbsUpModel informationThumbsUpModel = transformationInformationThumbsUpModel(informationThumbsUpReq, bindingResult);
-        return informationService.thumbsUp(informationThumbsUpModel);
+        log.info("implement function thumbsUp, activityThumbsUpReq body: {}", JSONObject.valueToString(activityThumbsUpReq));
+        ActivityThumbsUpModel activityThumbsUpModel = transformationActivityThumbsUpModel(activityThumbsUpReq, bindingResult);
+        return activityService.thumbsUp(activityThumbsUpModel);
     }
 
     @DeleteMapping("/thumbsUp/cancel")
     @ResponseBody
-    public CommonResponse cancelThumbsUp(@Valid @RequestBody InformationThumbsUpReq informationThumbsUpReq, BindingResult bindingResult) throws CustomizeException {
+    public CommonResponse cancelThumbsUp(@Valid @RequestBody ActivityThumbsUpReq activityThumbsUpReq, BindingResult bindingResult) throws CustomizeException {
 
-        log.info("implement function cancel cancelThumbsUp, informationThumbsUp body: {}", JSONObject.valueToString(informationThumbsUpReq));
-        InformationThumbsUpModel informationThumbsUpModel = transformationInformationThumbsUpModel(informationThumbsUpReq, bindingResult);
-        return informationService.cancelThumbsUp(informationThumbsUpModel);
+        log.info("implement function cancel cancelThumbsUp, activityThumbsUp body: {}", JSONObject.valueToString(activityThumbsUpReq));
+        ActivityThumbsUpModel activityThumbsUpModel = transformationActivityThumbsUpModel(activityThumbsUpReq, bindingResult);
+        return activityService.cancelThumbsUp(activityThumbsUpModel);
     }
 
-    private InformationThumbsUpModel transformationInformationThumbsUpModel(InformationThumbsUpReq informationThumbsUpReq, BindingResult bindingResult) throws CustomizeException {
+    private ActivityThumbsUpModel transformationActivityThumbsUpModel(ActivityThumbsUpReq activityThumbsUpReq, BindingResult bindingResult) throws CustomizeException {
         if (bindingResult.hasErrors()) {
             throw new CustomizeException(EnumError.PARAMETER_VALIDATION_ERROR, CommonUtil.processErrorString(bindingResult));
         }
 
-        InformationThumbsUpModel informationThumbsUpModel = new InformationThumbsUpModel();
-        informationThumbsUpModel.setInformationId(informationThumbsUpReq.getInformationId());
-        informationThumbsUpModel.setFromUid(informationThumbsUpReq.getFromUid());
-        return informationThumbsUpModel;
+        ActivityThumbsUpModel activityThumbsUpModel = new ActivityThumbsUpModel();
+        activityThumbsUpModel.setActivityId(activityThumbsUpReq.getActivityId());
+        activityThumbsUpModel.setFromUid(activityThumbsUpReq.getFromUid());
+        return activityThumbsUpModel;
+    }
+
+    @GetMapping("/topic/get")
+    @ResponseBody
+    public CommonResponse<List<ActivityTopicModel>> getTopics() {
+        List<ActivityTopicModel> res = activityService.getTopics();
+        return CommonResponse.ok(res);
     }
 }

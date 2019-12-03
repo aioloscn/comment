@@ -4,7 +4,6 @@ import com.aiolos.comment.common.CommonResponse;
 import com.aiolos.comment.common.Constant;
 import com.aiolos.comment.common.CustomizeException;
 import com.aiolos.comment.common.EnumError;
-import com.aiolos.comment.dal.ConcernRelationModelMapper;
 import com.aiolos.comment.dal.InformationModelMapper;
 import com.aiolos.comment.dal.InformationThumbsUpModelMapper;
 import com.aiolos.comment.model.InformationModel;
@@ -42,9 +41,6 @@ public class InformationServiceImpl implements InformationService {
     private RedisTemplate redisTemplate;
 
     @Autowired
-    private ConcernRelationModelMapper concernRelationModelMapper;
-
-    @Autowired
     private InformationModelMapper informationModelMapper;
 
     @Autowired
@@ -63,7 +59,7 @@ public class InformationServiceImpl implements InformationService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public CommonResponse deleteInformation(int id) {
+    public CommonResponse deleteInformation(Integer id) {
         int affected = informationModelMapper.deleteByPrimaryKey(id);
         if (affected > 0) {
             return CommonResponse.ok("已删除, null)");

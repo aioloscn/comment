@@ -53,5 +53,5 @@ public interface InformationThumbsUpModelMapper {
 
     int selectByModel(InformationThumbsUpModel record);
 
-    int cancelThumbsUp(InformationThumbsUpModel informationThumbsUpModel);
+    int cancelThumbsUp(InformationThumbsUpModel record);
 }

@@ -68,4 +68,6 @@ public interface InformationModelMapper {
     int increaseThumbsUp(int id);
 
     int decreaseThumbsUp(int id);
+
+    int increaseComment(int id);
 }

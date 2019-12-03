@@ -7,20 +7,20 @@ import javax.validation.constraints.NotNull;
  * @author Aiolos
  * @date 2019-11-28 23:16
  */
-public class InformationImageReq {
+public class ActivityImageReq {
 
-    @NotNull(message = "短消息ID不能为空")
-    private Integer informationId;
+    @NotNull(message = "活动ID不能为空")
+    private Integer activityId;
 
     @NotEmpty(message = "图片不能为空")
     private String image;
 
-    public Integer getInformationId() {
-        return informationId;
+    public Integer getActivityId() {
+        return activityId;
     }
 
-    public void setInformationId(Integer informationId) {
-        this.informationId = informationId;
+    public void setActivityId(Integer activityId) {
+        this.activityId = activityId;
     }
 
     public String getImage() {

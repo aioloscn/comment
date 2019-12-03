@@ -39,6 +39,9 @@ public enum EnumError implements CommonError {
     DELETE_FAIL(30004, "删除失败"),
     THUMBS_UP_FAIL(30005, "点赞失败"),
     CANCEL_THUMBS_UP_FAIL(30006, "取消点赞失败"),
+    RELEASE_FAIL(30007, "发布失败"),
+    ACTIVITY_RELEASE_FAIL(30008, "活动发布失败"),
+    ACTIVITY_IMAGE_RELEASE_FAIL(30009, "活动的图片提交失败"),
     ;
 
     EnumError(int errCode, String errMsg) {

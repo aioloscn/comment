@@ -11,6 +11,7 @@ import com.aiolos.comment.request.LoginReq;
 import com.aiolos.comment.request.RegisterReq;
 import com.aiolos.comment.service.UserService;
 import com.aiolos.comment.utils.CommonUtil;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -79,8 +80,13 @@ public class UserController {
             throw new CustomizeException(EnumError.PARAMETER_VALIDATION_ERROR, CommonUtil.processErrorString(bindingResult));
         }
 
+        String nickname = StringUtils.EMPTY;
+        if (StringUtils.isNotEmpty(registerReq.getNickname())) {
+            nickname = EmojiParser.parseToAliases(registerReq.getNickname(), EmojiParser.FitzpatrickAction.PARSE);
+        }
+
         UserModel userModel = new UserModel();
-        userModel.setNickname(registerReq.getNickname());
+        userModel.setNickname(nickname);
         userModel.setHeadPortrait(registerReq.getHeadPortrait());
         userModel.setTelphone(registerReq.getTelphone());
         userModel.setPassword(registerReq.getPassword());

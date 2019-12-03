@@ -59,19 +59,20 @@ public class UserServiceImpl implements UserService {
             return CommonResponse.error(EnumError.REGISTER_DUP_FAIL.getErrCode(), EnumError.REGISTER_DUP_FAIL.getErrMsg());
         }
 
+        int accountId = 1000000;
         try {
-            Long accountId = 100000L;
+
             if (redisTemplate.hasKey(Constant.ACCOUNTID)) {
                 Long redisRes = redisTemplate.opsForValue().increment(Constant.ACCOUNTID, 1L);
                 log.info("redis increment account id result: {}", redisRes);
+                userModel.setAccountId(redisRes.intValue());
             } else {
                 redisTemplate.opsForValue().set(Constant.ACCOUNTID, accountId);
             }
-            userModel.setAccountId(accountId.intValue());
         } catch (Exception e) {
             log.error(e.getMessage());
-            userModel.setAccountId(1000000);
-            redisTemplate.opsForValue().set(Constant.ACCOUNTID, 1000000);
+            userModel.setAccountId(accountId);
+            redisTemplate.opsForValue().set(Constant.ACCOUNTID, accountId);
         }
         userModel.setPassword(CommonUtil.encodeByMD5(userModel.getPassword()));
         userModel.setGmtCreate(new Date());

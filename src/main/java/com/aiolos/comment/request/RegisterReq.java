@@ -1,7 +1,6 @@
 package com.aiolos.comment.request;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author Aiolos

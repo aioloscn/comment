@@ -1,6 +1,10 @@
 package com.aiolos.comment.dal;
 
 import com.aiolos.comment.model.InformationCommentModel;
+import com.aiolos.comment.vo.InformationCommentVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface InformationCommentModelMapper {
     /**
@@ -50,4 +54,6 @@ public interface InformationCommentModelMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(InformationCommentModel record);
+
+    List<InformationCommentVO> getComments(@Param("id") Integer id, @Param("pageIndex") int pageIndex, @Param("pageCount") int pageCount);
 }

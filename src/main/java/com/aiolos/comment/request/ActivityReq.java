@@ -7,10 +7,12 @@ import javax.validation.constraints.NotNull;
  * @author Aiolos
  * @date 2019-11-28 02:02
  */
-public class InformationReq {
+public class ActivityReq {
 
     @NotNull(message = "发布者不能为空")
     private Integer fromUid;
+
+    private String title;
 
     @NotEmpty(message = "内容不能为空")
     private String content;
@@ -37,6 +39,14 @@ public class InformationReq {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getTopicId() {

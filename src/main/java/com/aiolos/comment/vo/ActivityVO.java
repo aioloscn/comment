@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * @author Aiolos
- * @date 2019-11-29 18:03
+ * @date 2019-12-03 05:01
  */
-public class InformationVO {
+public class ActivityVO {
 
     private Integer id;
 
@@ -20,8 +20,6 @@ public class InformationVO {
     private String content;
 
     private Integer topicId;
-
-    private Boolean errands;
 
     private String province;
 
@@ -48,16 +46,17 @@ public class InformationVO {
     private List<String> imageList;
 
     /**
-     * 当前用户对于该短消息的发布者是否已关注
-     */
-    private boolean followed;
-
-    /**
      * 当前用户对于该条短消息是否已点赞
      */
     private boolean praised;
 
     private Integer rowsTotal;
+
+    private Boolean plaintext;
+
+    private String firstImage;
+
+    private String title;
 
     public Integer getId() {
         return id;
@@ -105,14 +104,6 @@ public class InformationVO {
 
     public void setTopicId(Integer topicId) {
         this.topicId = topicId;
-    }
-
-    public Boolean getErrands() {
-        return errands;
-    }
-
-    public void setErrands(Boolean errands) {
-        this.errands = errands;
     }
 
     public String getProvince() {
@@ -211,14 +202,6 @@ public class InformationVO {
         this.imageList = imageList;
     }
 
-    public boolean isFollowed() {
-        return followed;
-    }
-
-    public void setFollowed(boolean followed) {
-        this.followed = followed;
-    }
-
     public boolean isPraised() {
         return praised;
     }
@@ -233,5 +216,29 @@ public class InformationVO {
 
     public void setRowsTotal(Integer rowsTotal) {
         this.rowsTotal = rowsTotal;
+    }
+
+    public Boolean getPlaintext() {
+        return plaintext;
+    }
+
+    public void setPlaintext(Boolean plaintext) {
+        this.plaintext = plaintext;
+    }
+
+    public String getFirstImage() {
+        return firstImage;
+    }
+
+    public void setFirstImage(String firstImage) {
+        this.firstImage = firstImage;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
