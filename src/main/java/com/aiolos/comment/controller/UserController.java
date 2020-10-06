@@ -1,6 +1,7 @@
 package com.aiolos.comment.controller;
 
 import com.aiolos.comment.common.CommonResponse;
+import com.aiolos.comment.common.Constant;
 import com.aiolos.comment.common.CustomizeException;
 import com.aiolos.comment.common.EnumError;
 import com.aiolos.comment.dysms.Dysms;
@@ -33,8 +34,6 @@ import java.security.NoSuchAlgorithmException;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    public static final String CURRENT_USER_SESSION = "currentUserSession";
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -105,7 +104,6 @@ public class UserController {
         }
 
         UserModel userModel = userService.login(loginReq.getTelphone(), loginReq.getPassword());
-        httpServletRequest.getSession().setAttribute(CURRENT_USER_SESSION, userModel);
         return CommonResponse.ok("登录成功", userModel);
     }
 
@@ -130,21 +128,22 @@ public class UserController {
         return CommonResponse.ok(userModel);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/logout/{telphone}")
     @ResponseBody
-    public CommonResponse logout() {
+    public CommonResponse logout(@PathVariable String telphone) {
 
         log.info("implement function logout");
-        httpServletRequest.getSession().invalidate();
+//        httpServletRequest.getSession().invalidate();
+        redisTemplate.delete(Constant.USERREDISKEY + telphone);
         return CommonResponse.ok(null);
     }
 
-    @GetMapping("/getcurrentuser")
+    @GetMapping("/getcurrentuser/{telphone}")
     @ResponseBody
-    public CommonResponse<UserModel> getCurrentUser() {
+    public CommonResponse<UserModel> getCurrentUser(@PathVariable String telphone) {
 
         log.info("implement function get current user");
-        UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute(CURRENT_USER_SESSION);
+        UserModel userModel = (UserModel) redisTemplate.opsForValue().get(Constant.USERREDISKEY + telphone);
         return CommonResponse.ok(userModel);
     }
 

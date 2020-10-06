@@ -63,17 +63,17 @@ public class Dysms {
         }
         log.info("code: {}", codeStr);
 
-//        try {
-//            response = acsClient.getAcsResponse(request);
-//        } catch (ClientException e) {
-//            log.error("向{}发送短信验证码错误, 错误信息：{}", phone, e.getErrMsg());
-//            throw new CustomizeException(EnumError.SEND_SMS_FAIL);
-//        }
-//
-//        log.info("向{}发送短信验证码，验证码为：{}，返回状态码和消息为：{}，{}", phone, codeStr, response.getCode(), response.getMessage());
-//        if (!response.getCode().equals("OK")) {
-//            throw new CustomizeException(EnumError.SEND_SMS_FAIL);
-//        }
+        try {
+            response = acsClient.getAcsResponse(request);
+        } catch (ClientException e) {
+            log.error("向{}发送短信验证码错误, 错误信息：{}", phone, e.getErrMsg());
+            throw new CustomizeException(EnumError.SEND_SMS_FAIL);
+        }
+
+        log.info("向{}发送短信验证码，验证码为：{}，返回状态码和消息为：{}，{}", phone, codeStr, response.getCode(), response.getMessage());
+        if (!response.getCode().equals("OK")) {
+            throw new CustomizeException(EnumError.SEND_SMS_FAIL);
+        }
 
         return CommonResponse.ok("验证码已发送", null);
     }

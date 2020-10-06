@@ -10,6 +10,7 @@ import com.aiolos.comment.model.ConcernRelationModel;
 import com.aiolos.comment.model.UserModel;
 import com.aiolos.comment.service.UserService;
 import com.aiolos.comment.utils.CommonUtil;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,8 @@ public class UserServiceImpl implements UserService {
         UserModel userModel = userModelMapper.getUserByTelphone(telphone);
         if (userModel != null) {
 
+            String nickname = EmojiParser.parseToUnicode(userModel.getNickname());
+            userModel.setNickname(nickname);
             userModel.setPassword(StringUtils.EMPTY);
             redisTemplate.opsForValue().set(Constant.USERREDISKEY + telphone, userModel);
             redisTemplate.expire(Constant.USERREDISKEY  + telphone, 7, TimeUnit.DAYS);

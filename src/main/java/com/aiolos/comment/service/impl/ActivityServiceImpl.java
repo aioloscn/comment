@@ -14,9 +14,22 @@ import com.aiolos.comment.service.ActivityService;
 import com.aiolos.comment.utils.DateUtils;
 import com.aiolos.comment.vo.ActivityVO;
 import com.aiolos.comment.vo.CommonPageVO;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Request;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
@@ -25,8 +38,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Aiolos
@@ -38,6 +54,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Value("${image.url}")
     private String imageUrl;
+
+    @Autowired
+    private RestHighLevelClient highLevelClient;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -79,6 +98,11 @@ public class ActivityServiceImpl implements ActivityService {
                 if (StringUtils.isNotEmpty(activityVO.getContent())) {
                     String content = EmojiParser.parseToUnicode(activityVO.getContent());
                     activityVO.setContent(content);
+                }
+
+                if (StringUtils.isNotEmpty(activityVO.getNickname())) {
+                    String nickname = EmojiParser.parseToUnicode(activityVO.getNickname());
+                    activityVO.setNickname(nickname);
                 }
 
                 if (StringUtils.isNotEmpty(activityVO.getTitle())) {
@@ -169,5 +193,48 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<ActivityTopicModel> getTopics() {
         return activityTopicModelMapper.selectAllTopics();
+    }
+
+    @Override
+    public CommonResponse search(int topicId, Integer userId, String keyword, int pageIndex, int pageCount) throws CustomizeException {
+
+        /*SearchRequest searchRequest = new SearchRequest("activity");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchQuery("content", keyword));
+        searchSourceBuilder.timeout(new TimeValue(10, TimeUnit.SECONDS));
+        SearchResponse searchResponse = null;
+        try {
+            searchResponse = highLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            SearchHit[] hits = searchResponse.getHits().getHits();
+            for (SearchHit hit : hits) {
+                hit.getSourceAsMap();
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new CustomizeException(EnumError.ES_SEARCH_ERROR);
+        }*/
+
+        Request request = new Request("GET", "/activity/_search");
+        String reqJson = "";
+        log.info("ES request: {}", reqJson);
+        request.setJsonEntity(reqJson);
+        try {
+            Response response = highLevelClient.getLowLevelClient().performRequest(request);
+            String responseStr = EntityUtils.toString(response.getEntity());
+            log.info("ES response: {}", responseStr);
+            JSONObject jsonObject = JSONObject.parseObject(responseStr);
+            JSONArray jsonArray = jsonObject.getJSONObject("hits").getJSONArray("hits");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                Integer id = Integer.parseInt(object.getString("_id"));
+                BigDecimal distance = new BigDecimal(object.getJSONObject("fields").getJSONArray("distance").get(0).toString());
+
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new CustomizeException(EnumError.ES_SEARCH_ERROR);
+        }
+
+        return CommonResponse.ok(null);
     }
 }

@@ -132,7 +132,7 @@ public class ActivityController {
 
         log.info("url: {}", url);
         ActivityImagesModel activityImagesModel = new ActivityImagesModel();
-        activityImagesModel.setActivityId(activityImagesModel.getActivityId());
+        activityImagesModel.setActivityId(activityImageReq.getActivityId());
         activityImagesModel.setImage(url);
         return activityImageService.insertImage(activityImagesModel);
     }

@@ -25,4 +25,6 @@ public interface ActivityService {
     CommonResponse cancelThumbsUp(ActivityThumbsUpModel activityThumbsUpModel) throws CustomizeException;
 
     List<ActivityTopicModel> getTopics();
+
+    CommonResponse search(int topicId, Integer userId, String keyword, int pageIndex, int pageCount) throws CustomizeException;
 }

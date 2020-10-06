@@ -92,6 +92,12 @@ public class InformationServiceImpl implements InformationService {
                     String content = EmojiParser.parseToUnicode(informationVO.getContent());
                     informationVO.setContent(content);
                 }
+
+                if (StringUtils.isNotEmpty(informationVO.getNickname())) {
+                    String nickname = EmojiParser.parseToUnicode(informationVO.getNickname());
+                    informationVO.setNickname(nickname);
+                }
+
                 // 转换时间
                 informationVO.setDateInterval(DateUtils.toToday(informationVO.getGmtCreate()));
 

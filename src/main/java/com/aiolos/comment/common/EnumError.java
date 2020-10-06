@@ -15,6 +15,7 @@ public enum EnumError implements CommonError {
     NO_HANDLER_FOUND(10006, "找不到执行的路径"),
     NULL_POINT_ERROR(10007, "缺少相关数据"),
     REDIS_ERROR(10008, "服务器缓存出现异常"),
+    ES_SEARCH_ERROR(10009, "ES查询出错"),
 
     // 用户服务相关错误类型
     USER_NOT_LOGGED_IN(20000, "用户尚未登录"),

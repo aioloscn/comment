@@ -1,5 +1,6 @@
 package com.aiolos.comment.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -88,6 +89,16 @@ public class ActivityModel {
      * @mbg.generated
      */
     private String county;
+
+    /**
+     * 经度
+     */
+    private BigDecimal longitude;
+
+    /**
+     * 纬度
+     */
+    private BigDecimal latitude;
 
     /**
      * Database Column Remarks:
@@ -365,6 +376,22 @@ public class ActivityModel {
      */
     public void setCounty(String county) {
         this.county = county == null ? null : county.trim();
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
     }
 
     /**
