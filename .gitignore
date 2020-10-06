@@ -31,6 +31,5 @@ build/
 .vscode/
 
 src/main/java/com/aiolos/comment/common/Constant.java
-src/main/resources/application.yml
-src/main/resources/mybatis-generator.xml
+src/main/resources/application-jdbc.yml
 src/main/resources/jdbc.properties
