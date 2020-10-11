@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2019-10-12 21:39
  */
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice   // 所有执行的controller都会被这个切面所包含
 public class GlobalExceptionAdvice {
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = Exception.class)  // 只要对应的controller抛出了任何Exception或者继承自Exception的异常，都会做一个对应的处理
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public CommonResponse handlerCustomizeException(HttpServletRequest req, HttpServletResponse res, Exception e) {

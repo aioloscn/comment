@@ -19,12 +19,12 @@ public class CommonResponse<T> implements Serializable {
 
     private CommonResponse() {
         this.code = 200;
-        this.msg = "OK";
+        this.msg = "SUCCESS";
     }
 
     private CommonResponse(T data) {
         this.code = 200;
-        this.msg = "OK";
+        this.msg = "SUCCESS";
         this.data = data;
     }
 
